@@ -52,6 +52,21 @@ const InstaGrid = ({ items }: InstaGridProps) => {
     setSelectedItem(null);
   };
 
+  const handleShare = (item: InstaItem) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Check out this Instagram post!",
+          text: item.caption,
+          url: item.permalink,
+        })
+        .catch((error) => console.error("Error sharing", error));
+    } else {
+      // Fallback for browsers that don't support the share API
+      alert("Share API is not supported in this browser.");
+    }
+  };
+
   if (items.length === 0) {
     return (
       <div style={gridStyle}>
@@ -92,7 +107,9 @@ const InstaGrid = ({ items }: InstaGridProps) => {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Button size="small">Share</Button>
+              <Button size="small" onClick={() => handleShare(item)}>
+                Share
+              </Button>
               <Button size="small" onClick={() => handleOpen(item)}>
                 Learn More
               </Button>
@@ -144,10 +161,12 @@ const InstaGrid = ({ items }: InstaGridProps) => {
                   height: "auto",
                 }} // Responsive width
               />
-              <Box sx={{
-                paddingLeft: {xs: "18px"},
-                paddingRight: {xs: "18px"}
-                }}>
+              <Box
+                sx={{
+                  paddingLeft: { xs: "18px" },
+                  paddingRight: { xs: "18px" },
+                }}
+              >
                 <Typography
                   id="transition-modal-title"
                   variant="h6"
