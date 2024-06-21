@@ -71,7 +71,7 @@ const InstaGrid = ({ items }: InstaGridProps) => {
     <div style={gridStyle}>
       {items.map((item) => {
         const captionLines = item.caption.split("\n");
-        const firstThreeLines = captionLines.slice(0, 3).join(" ");
+        const firstThreeLines = item.caption.split("\n").slice(1, 3).join("\n");
 
         return (
           <Card style={cardStyle} key={item.caption}>
@@ -119,6 +119,7 @@ const InstaGrid = ({ items }: InstaGridProps) => {
               sx={{
                 position: "absolute",
                 display: "flex",
+                flexDirection: { xs: "column", lg: "row" },
                 gap: "20px",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -134,13 +135,19 @@ const InstaGrid = ({ items }: InstaGridProps) => {
                 overflowY: "auto",
               }}
             >
-              <img
+              <Box
+                component="img"
                 src={selectedItem.mediaUrl}
                 alt="Instagram item"
-                width="40%"
-                height="auto"
+                sx={{
+                  width: { xs: "100%", lg: "40%" },
+                  height: "auto",
+                }} // Responsive width
               />
-              <Box>
+              <Box sx={{
+                paddingLeft: {xs: "18px"},
+                paddingRight: {xs: "18px"}
+                }}>
                 <Typography
                   id="transition-modal-title"
                   variant="h6"
@@ -152,7 +159,7 @@ const InstaGrid = ({ items }: InstaGridProps) => {
                   id="transition-modal-description"
                   sx={{ mt: 2, whiteSpace: "pre-wrap" }}
                 >
-                  {selectedItem.caption.split('\n').slice(1).join('\n')}
+                  {selectedItem.caption.split("\n").slice(1).join("\n")}
                 </Typography>
               </Box>
             </Box>
