@@ -61,9 +61,8 @@ export default function Home() {
   const [instaItems, setInstaItems] = useState<InstaItem[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const userId = BigInt("25669722836007062");
-  const accessToken =
-    "IGQWRQUVRNTDdmVmw5OUE3S1M3SlFQUlJZASnBYZAFI4UFJabFFzQ1dPNldueFJ2YUttWmlZAMzBfQTM5S2plT0lDWVptVE5Ra0c4aDBEZAlAzR2hGU3JJUE1tWWNKZAWVpZAUV3MjdDcF9XdDdzTzVpRXFnUjZAhdzY5WE0ZD";
+  const userId = process.env.NEXT_PUBLIC_INSTAGRAM_USER_ID;
+  const accessToken = process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN;
 
   const instaUrl = `https://graph.instagram.com/${userId}/media?access_token=${accessToken}`;
 
