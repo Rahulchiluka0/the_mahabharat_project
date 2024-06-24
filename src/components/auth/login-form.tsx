@@ -47,25 +47,27 @@ export default function LoginPage() {
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
 
   const onLogin = async (data: Values) => {
+    let progressInterval: NodeJS.Timeout | undefined; // Declare progressInterval here
+  
     try {
       setLoading(true);
       setProgress(0);
-
+  
       console.log("Form data:", data);
-
+  
       // Estimated total loading time in milliseconds
       const estimatedLoadingTime = 5000;
-
+  
       // Update the progress value every 100 milliseconds
       const interval = 100;
-      const progressInterval = setInterval(() => {
+      progressInterval = setInterval(() => {
         setProgress((prevProgress) => {
           const nextProgress =
             prevProgress + 100 / (estimatedLoadingTime / interval);
           return nextProgress >= 100 ? 100 : nextProgress;
         });
       }, interval);
-
+  
       const response = await axios.post("/api/users/login", data);
       console.log("Login success", response.data);
       toast.success("Login success");
@@ -78,11 +80,12 @@ export default function LoginPage() {
     } catch (error: any) {
       console.log("Login failed", error.message);
       toast.error(error.message);
-      clearInterval(progressInterval);
+      clearInterval(progressInterval); // Access progressInterval here
       setLoading(false);
       setProgress(0); // Reset progress on error
     }
   };
+  
 
   useEffect(() => {
     if (!loading) {
