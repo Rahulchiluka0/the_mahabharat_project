@@ -196,7 +196,7 @@ export default function Home() {
   };
 
   const filteredInstaItems = instaItems.filter((item) =>
-    item.caption.toLowerCase().includes(searchQuery.toLowerCase())
+    item.caption[0].toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const logout = async () => {
