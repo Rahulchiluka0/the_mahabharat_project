@@ -63,6 +63,8 @@ export default function SignupPage() {
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
 
   const onSignup = async (data: Values) => {
+    let progressInterval: NodeJS.Timeout | undefined; // Declare progressInterval here
+
     try {
       setLoading(true);
       setProgress(0);
