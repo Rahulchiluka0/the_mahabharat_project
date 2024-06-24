@@ -15,6 +15,11 @@ import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 
+import axios from "axios";
+import Link from "next/link";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -60,6 +65,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Home() {
   const [instaItems, setInstaItems] = useState<InstaItem[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const router = useRouter();
 
   const userId = process.env.NEXT_PUBLIC_INSTAGRAM_USER_ID;
   const accessToken = process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN;
@@ -114,13 +121,26 @@ export default function Home() {
     doFetch();
   }, [userId, accessToken, instaUrl]);
 
-  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setSearchQuery(event.target.value);
   };
 
   const filteredInstaItems = instaItems.filter((item) =>
     item.caption.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const logout = async () => {
+    try {
+      await axios.get("/api/users/logout");
+      toast.success("Logout successful");
+      router.push("/login");
+    } catch (error: any) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
+  };
 
   return (
     <>
@@ -155,6 +175,12 @@ export default function Home() {
                 onChange={handleSearchInputChange}
               />
             </Search>
+            <button
+              onClick={logout}
+              className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Logout
+            </button>
           </Toolbar>
         </AppBar>
       </Box>

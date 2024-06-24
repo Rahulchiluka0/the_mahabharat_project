@@ -19,6 +19,7 @@ const gridStyle: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
   gap: "16px",
+  gridRowGap: "24px",
   padding: "16px",
   justifyContent: "center",
 };
@@ -28,12 +29,20 @@ const cardStyle: React.CSSProperties = {
   flexDirection: "column",
   justifyContent: "space-between",
   maxWidth: "345px",
+  height: "450px", // Fixed height for all cards
   margin: "auto",
 };
 
 const mediaStyle: React.CSSProperties = {
   height: "250px",
   objectFit: "cover",
+};
+
+const contentStyle: React.CSSProperties = {
+  flexGrow: 1,
+  height: "155px", // Fixed height for all cards
+  overflow: "hidden",
+  textOverflow: "ellipsis",
 };
 
 const InstaGrid = ({ items }: InstaGridProps) => {
@@ -97,7 +106,7 @@ const InstaGrid = ({ items }: InstaGridProps) => {
                 style={mediaStyle}
                 image={item.mediaUrl}
               />
-              <CardContent>
+              <CardContent style={contentStyle}>
                 <Typography gutterBottom variant="h5" component="div">
                   {captionLines[0]}
                 </Typography>
@@ -147,9 +156,8 @@ const InstaGrid = ({ items }: InstaGridProps) => {
                 bgcolor: "background.paper",
                 border: "2px solid #000",
                 boxShadow: 24,
-                // p: 4,
                 maxHeight: "80vh",
-                overflowY: "auto",
+                overflow: "hidden",
               }}
             >
               <Box
@@ -157,14 +165,16 @@ const InstaGrid = ({ items }: InstaGridProps) => {
                 src={selectedItem.mediaUrl}
                 alt="Instagram item"
                 sx={{
-                  width: { xs: "100%", lg: "40%" },
+                  width: { xs: "100%", sm: "55%", md: "60%", lg: "45%" },
                   height: "auto",
-                }} // Responsive width
+                }}
               />
               <Box
                 sx={{
-                  paddingLeft: { xs: "18px" },
-                  paddingRight: { xs: "18px" },
+                  padding: "18px",
+                  maxHeight: "80vh",
+                  overflowY: "auto",
+                  width: { xs: "100%", lg: "55%" },
                 }}
               >
                 <Typography
