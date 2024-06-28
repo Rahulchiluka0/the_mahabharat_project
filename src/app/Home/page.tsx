@@ -28,6 +28,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Button, InputBase } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import Link from "next/link";
 
 const drawerWidth = 240;
 
@@ -196,7 +197,10 @@ export default function Home() {
   };
 
   const filteredInstaItems = instaItems.filter((item) =>
-    item.caption[0].toLowerCase().includes(searchQuery.toLowerCase())
+    item.caption
+      .split("\n")[0]
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
   );
 
   const logout = async () => {
@@ -211,6 +215,19 @@ export default function Home() {
   };
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    if (isMobile) {
+      if (open) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "auto";
+      }
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isMobile, open]);
 
   return (
     <>
@@ -276,30 +293,58 @@ export default function Home() {
           </DrawerHeader>
           <Divider />
           <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem key={text} disablePadding>
+            <Link href="/inbox">
+              <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    <InboxIcon />
+                    {/* : <MailIcon />} */}
                   </ListItemIcon>
-                  <ListItemText primary={text} />
+                  <ListItemText primary="Inbox" />
                 </ListItemButton>
               </ListItem>
-            ))}
+            </Link>
+          </List>
+          <List>
+            <Link href="/starred">
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <InboxIcon />
+                    {/* : <MailIcon />} */}
+                  </ListItemIcon>
+                  <ListItemText primary="Starred" />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          </List>
+          <List>
+            <Link href="/send-email">
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <InboxIcon />
+                    {/* : <MailIcon />} */}
+                  </ListItemIcon>
+                  <ListItemText primary="Send-email" />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          </List>
+          <List>
+            <Link href="/drafts">
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <InboxIcon />
+                    {/* : <MailIcon />} */}
+                  </ListItemIcon>
+                  <ListItemText primary="Drafts" />
+                </ListItemButton>
+              </ListItem>
+            </Link>
           </List>
           <Divider />
-          <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
           {isMobile && (
             <Box sx={{ position: "absolute", bottom: 0, width: "100%" }}>
               <Divider />

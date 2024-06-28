@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { toast } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import {
   Alert,
   Box,
@@ -84,6 +84,7 @@ export default function SignupPage() {
 
       const response = await axios.post("/api/users/signup", data);
       console.log("Signup success", response.data);
+      toast.success("Successfully Signed up");
       clearInterval(progressInterval);
       setProgress(100);
       setTimeout(() => {
@@ -92,7 +93,7 @@ export default function SignupPage() {
       }, 500); // Slight delay to show 100% progress
     } catch (error: any) {
       console.log("Signup failed", error.message);
-      toast.error(error.message);
+      toast.error(error.response.data.error);
       clearInterval(progressInterval);
       setLoading(false);
       setProgress(0); // Reset progress on error
@@ -242,6 +243,7 @@ export default function SignupPage() {
           </Box>
         </Stack>
       </form>
+      <Toaster position="top-center" reverseOrder={false} />
       <hr />
       {/* <label htmlFor="username">username</label>
       <input

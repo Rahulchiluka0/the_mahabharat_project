@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { toast } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import { z as zod } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,22 +43,20 @@ export default function LoginPage() {
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
 
   const onLogin = async (data: Values) => {
-    let progressInterval: NodeJS.Timeout | undefined; // Declare progressInterval here
-  
+    let progressInterval: NodeJS.Timeout | undefined;
+
     try {
       setLoading(true);
       setProgress(0);
-  
+
       console.log("Form data:", data);
-  
-      // Estimated total loading time in milliseconds
+
       const estimatedLoadingTime = 5000;
-  
-      // Update the progress value every 100 milliseconds
       const interval = 100;
       progressInterval = setInterval(() => {
         setProgress((prevProgress) => {
@@ -67,29 +65,30 @@ export default function LoginPage() {
           return nextProgress >= 100 ? 100 : nextProgress;
         });
       }, interval);
-  
+
       const response = await axios.post("/api/users/login", data);
       console.log("Login success", response.data);
       toast.success("Login success");
       clearInterval(progressInterval);
       setProgress(100);
+
       setTimeout(() => {
         setLoading(false);
         router.push("/");
       }, 500);
     } catch (error: any) {
-      console.log("Login failed", error.message);
-      toast.error(error.message);
-      clearInterval(progressInterval); // Access progressInterval here
+      console.log("Login failed", error.response?.data?.error || error.message);
+      const errorMessage = error.response?.data?.error || error.message;
+      toast.error(errorMessage);
+      clearInterval(progressInterval);
       setLoading(false);
-      setProgress(0); // Reset progress on error
+      setProgress(0);
     }
   };
-  
 
   useEffect(() => {
     if (!loading) {
-      setProgress(0); // Reset progress when loading stops
+      setProgress(0);
     }
   }, [loading]);
 
@@ -142,7 +141,7 @@ export default function LoginPage() {
           />
 
           {errors.root ? (
-            <Alert color="error">{errors.root.message}</Alert>
+            <Alert severity="error">{errors.root.message}</Alert>
           ) : null}
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             {loading ? (
@@ -186,6 +185,7 @@ export default function LoginPage() {
           </Box>
         </Stack>
       </form>
+      <Toaster position="top-center" reverseOrder={false} />
     </Stack>
   );
 }
